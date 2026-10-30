@@ -1,10 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from GA import population
+from src.ga_framework import population
+from src.fitness_sim import fitness_sim
 
-pop = population(10, 3)
 
-fig, ax = plt.subplots(5, 2, figsize=(10, 6))
+pop = population(10, 3, fitness_sim)
+
+fig, axes = plt.subplots(5, 2, figsize=(8, 10))
 
 target = 10
 time = 10
@@ -26,7 +28,7 @@ for i in range(5):
 		a = (pop.chroms[i][0] * error + sum_errors / pop.chroms[i][1] + (error - last_error) * pop.chroms[i][2]) / mass
 		v += a * step
 		
-	ax[i][0].plot(t, x)
+	axes[i][0].plot(t, x)
 	
 pop.evolution(5000, 0.2)
 
@@ -45,6 +47,8 @@ for i in range(5):
 		a = (pop.chroms[i][0] * error + sum_errors / pop.chroms[i][1] + (error - last_error) * pop.chroms[i][2]) / mass
 		v += a * step
 		
-	ax[i][1].plot(t, x)
-	
+	axes[i][1].plot(t, x)
+		
+axes[0][0].set_title('First Generation')
+axes[0][1].set_title('Last Generation')
 plt.show()

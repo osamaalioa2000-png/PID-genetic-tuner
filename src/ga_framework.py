@@ -1,24 +1,25 @@
 import numpy as np
-from fitness_sim import fitness_sim
 
 rng = np.random.default_rng(42)
 class population():
-	def __init__(self, pop_size, gene_num):
+	def __init__(self, pop_size, gene_num, fit_func):
 		self.pop_size = pop_size
 		self.gene_num = gene_num
 		
-		self.p_init_scale = 1
-		self.i_init_scale = 10 ** 9
-		self.d_init_scale = 10
-		p = np.random.random(pop_size) * self.p_init_scale
-		i = np.random.random(pop_size) * self.i_init_scale
-		d = np.random.random(pop_size) * self.d_init_scale
-		self.chroms = np.array([p, i, d]).T
+		self.gene_init_scale = [1, 10 ** 9, 10]
+		self.chroms = np.zeros((self.gene_num, self.pop_size))
+		for i in range(gene_num):
+			self.chroms[i] = np.random.random(pop_size) * self.gene_init_scale[i]
+			
+		self.chroms = self.chroms.T
 		
-		self.mutation_scale = 1
-		self.fitnesses = fitness_sim(self.chroms, 1)
+		self.fit_func = fit_func
+		self.fitnesses = self.fit_func(self.chroms, 1)
 		self.average_fitness = sum(self.fitnesses) / self.pop_size
 		self.max_fitness = max(self.fitnesses)
+		
+		self.sample_size = 4
+		self.mutation_scale = 1
 		
 	def select(self, select_type, sample_size=1):
 		if select_type == 'wheel':
@@ -62,11 +63,11 @@ class population():
 	def evolution(self, number_of_generations, mutation_rate):
 		self.rang = np.arange(self.pop_size)
 		for _ in range(number_of_generations):
-			parents = self.select('tournament', 4)
+			parents = self.select('tournament', self.sample_size)
 			children = self.crossover(parents)
 			self.chroms = self.mutate(children, mutation_rate)
 			
-			self.fitnesses = fitness_sim(self.chroms, self.average_fitness / self.max_fitness)
+			self.fitnesses = self.fit_func(self.chroms, self.average_fitness / self.max_fitness)
 			self.average_fitness = sum(self.fitnesses) / self.pop_size
 			self.max_fitness = max(self.fitnesses)
 			
