@@ -3,6 +3,18 @@ import numpy as np
 rng = np.random.default_rng(42)
 class population():
 	def __init__(self, pop_size, gene_num, fit_func):
+		"""
+		A modular genetic algorithm framework
+		Parameters:
+        -----------
+        pop_size : int
+            The number of candidate solutions in each generation.
+		gene_num : int
+			The number of genese for every chromosome.
+        fit_func : callable
+            A custom function that takes in chromosomes and returns their fitness scores.
+		"""
+		
 		self.pop_size = pop_size
 		self.gene_num = gene_num
 		
