@@ -1,6 +1,21 @@
 import numpy as np
 
 def fitness_sim(chroms, weight):
+	"""
+    Evaluates the fitness of a given set of PID configurations.
+    
+    Parameters:
+    -----------
+    chroms : np.ndarray
+        A 2D array containing sets of PID parameters [Kp, Ki, Kd].
+        
+    Returns:
+    --------
+    np.ndarray
+        The calculated fitness for the system response. 
+		system response fitness is defined as (1 / (overshoot + settling_time + error))
+    """
+	
 	target = 10
 	sim_time = 10
 	time_step = 0.1
