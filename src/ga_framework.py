@@ -36,13 +36,13 @@ class population():
 		self.sample_size = 4
 		self.mutation_scale = 1
 		
-	def select(self, sample_size=1):
+	def select(self):
 		if self.select_type == 'wheel':
 			ind = np.random.choice(self.rang, size=(self.pop_size), p=(self.fitnesses / np.sum(self.fitnesses)))
 			return self.chroms[ind]
 			
 		elif self.select_type == 'tournament':
-			contenders = np.random.choice(self.pop_size, size=(self.pop_size, sample_size))
+			contenders = np.random.choice(self.pop_size, size=(self.pop_size, self.sample_size))
 			winners_ind = contenders[self.rang, np.argmax(self.fitnesses[contenders], axis=1)]
 			winners = self.chroms[winners_ind]
 			return winners
@@ -76,7 +76,7 @@ class population():
 	def evolution(self, number_of_generations, mutation_rate):
 		self.rang = np.arange(self.pop_size)
 		for _ in range(number_of_generations):
-			parents = self.select(self.sample_size)
+			parents = self.select()
 			children = self.crossover(parents)
 			self.chroms = self.mutate(children, mutation_rate)
 			
